@@ -1,4 +1,4 @@
-# ActiveRecord::Precounter
+# ActiveRecord::Precounter [![Build Status](https://travis-ci.org/k0kubun/activerecord-precounter.svg?branch=master)](https://travis-ci.org/k0kubun/activerecord-precounter)
 
 Yet Another N+1 COUNT Query Killer for ActiveRecord, counter\_cache alternative.  
 ActiveRecord::Precounter allows you to cache count of associated records by eager loading.
