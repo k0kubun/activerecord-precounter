@@ -44,19 +44,6 @@ end
 # SELECT COUNT(`favorites`.`tweet_id`), `favorites`.`tweet_id` FROM `favorites` WHERE `favorites`.`tweet_id` IN (1, 2, 3, 4, 5) GROUP BY `favorites`.`tweet_id`
 ```
 
-#### eager\_count
-
-Like `eager_load`, `ActiveRecord::Precounter#eager_count` method allows you to load counts by one JOIN query.
-
-```rb
-tweets = Tweet.all
-ActiveRecord::Precounter.new(tweets, :favorites).eager_count
-tweets.eager_count(:favorites).each do |tweet|
-  p tweet.favorites_count
-end
-# SELECT `tweets`.`id` AS t0_r0, `tweets`.`tweet_id` AS t0_r1, `tweets`.`user_id` AS t0_r2, `tweets`.`created_at` AS t0_r3, `tweets`.`updated_at` AS t0_r4, COUNT(`favorites`.`id`) AS t1_r0 FROM `tweets` LEFT OUTER JOIN `favorites` ON `favorites`.`tweet_id` = `tweets`.`id` GROUP BY tweets.id
-```
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -67,8 +54,11 @@ gem 'activerecord-precounter'
 
 ## Limitation
 
-Unlike [activerecord-precount](https://github.com/k0kubun/activerecord-precount), the cache store is not ActiveRecord association and it does not utilize ActiveRecord preloader/join\_dependency.
-Thus it can't eager load nested associations at once. But you can do it after eager loading parent associations of children you want to count.
+Target `has_many` association must have inversed `belongs_to`.
+i.e. `ActiveRecord::Precounter.new(tweets, :favorites).precount` needs both `Tweet.has_many(:favorites)` and `Favorite.belongs_to(:tweet)`.
+
+Unlike [activerecord-precount](https://github.com/k0kubun/activerecord-precount), the cache store is not ActiveRecord association and it does not utilize ActiveRecord preloader.
+Thus you can't use `preload` to eager load counts for nested associations. And currently there's no JOIN support.
 
 ## License
 

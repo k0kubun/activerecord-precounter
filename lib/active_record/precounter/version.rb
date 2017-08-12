@@ -1,5 +1,5 @@
 module ActiveRecord
-  module Precounter
+  class Precounter
     VERSION = '0.1.0'
   end
 end
