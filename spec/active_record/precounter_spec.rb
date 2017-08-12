@@ -17,7 +17,7 @@ RSpec.describe ActiveRecord::Precounter do
     it 'precounts has_many count properly' do
       expected = Tweet.all.map { |t| t.favorites.count }
       expect(
-        ActiveRecord::Precounter.new(Tweet.all, :favorites).precount.map { |t| t.favorites_count }
+        ActiveRecord::Precounter.new(Tweet.all).precount(:favorites).map { |t| t.favorites_count }
       ).to eq(expected)
     end
   end

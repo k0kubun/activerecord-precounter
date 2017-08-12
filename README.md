@@ -36,7 +36,7 @@ Like `preload`, it loads counts by multiple queries
 
 ```rb
 tweets = Tweet.all
-ActiveRecord::Precounter.new(tweets, :favorites).precount
+ActiveRecord::Precounter.new(tweets).precount(:favorites)
 tweets.each do |tweet|
   p tweet.favorites_count
 end
@@ -55,7 +55,7 @@ gem 'activerecord-precounter'
 ## Limitation
 
 Target `has_many` association must have inversed `belongs_to`.
-i.e. `ActiveRecord::Precounter.new(tweets, :favorites).precount` needs both `Tweet.has_many(:favorites)` and `Favorite.belongs_to(:tweet)`.
+i.e. `ActiveRecord::Precounter.new(tweets).precount(:favorites)` needs both `Tweet.has_many(:favorites)` and `Favorite.belongs_to(:tweet)`.
 
 Unlike [activerecord-precount](https://github.com/k0kubun/activerecord-precount), the cache store is not ActiveRecord association and it does not utilize ActiveRecord preloader.
 Thus you can't use `preload` to eager load counts for nested associations. And currently there's no JOIN support.

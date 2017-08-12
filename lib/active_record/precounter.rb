@@ -5,19 +5,20 @@ module ActiveRecord
     class MissingInverseOf < StandardError; end
 
     # @param [ActiveRecord::Relation] relation - Parent resources relation.
-    # @param [Array<String,Symbol>] association_names - Eager loaded association names. e.g. `[:users, :likes]`
-    def initialize(relation, *association_names)
+    def initialize(relation)
       @relation = relation
-      @association_names = association_names.map(&:to_s)
     end
 
+    # @param [Array<String,Symbol>] association_names - Eager loaded association names. e.g. `[:users, :likes]`
     # @return [Array<ActiveRecord::Base>]
-    def precount
+    def precount(*association_names)
       records = @relation.to_a
       return if records.empty?
 
-      @association_names.each do |association_name|
+      association_names.each do |association_name|
+        association_name = association_name.to_s
         reflection = @relation.klass.reflections.fetch(association_name)
+
         if reflection.inverse_of.nil?
           raise MissingInverseOf.new(
             "`#{reflection.klass}` does not have inverse of `#{@relation.klass}##{reflection.name}`. "\
