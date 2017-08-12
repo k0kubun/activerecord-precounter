@@ -1,5 +1,33 @@
-sudo: false
+script: ci/travis.rb
 language: ruby
-rvm:
-  - 2.3.3
-before_install: gem install bundler -v 1.14.5
+sudo: false
+cache: bundler
+branches:
+  only:
+    - master
+matrix:
+  include:
+    - rvm: 2.1.10
+      env: TASK=test ARCONN=mysql2
+      gemfile: ci/Gemfile.activerecord-4.2.x
+    - rvm: 2.2.7
+      env: TASK=test ARCONN=mysql2
+      gemfile: ci/Gemfile.activerecord-5.1.x
+    - rvm: 2.3.4
+      env: TASK=test ARCONN=mysql2
+      gemfile: ci/Gemfile.activerecord-5.1.x
+    - rvm: 2.4.1
+      env: TASK=test ARCONN=mysql2
+      gemfile: ci/Gemfile.activerecord-4.2.x
+    - rvm: 2.4.1
+      env: TASK=test ARCONN=mysql2
+      gemfile: ci/Gemfile.activerecord-5.0.x
+    - rvm: 2.4.1
+      env: TASK=test ARCONN=sqlite3
+      gemfile: ci/Gemfile.activerecord-5.1.x
+    - rvm: 2.4.1
+      env: TASK=test ARCONN=mysql2
+      gemfile: ci/Gemfile.activerecord-5.1.x
+    - rvm: 2.4.1
+      env: TASK=test ARCONN=postgresql
+      gemfile: ci/Gemfile.activerecord-5.1.x
