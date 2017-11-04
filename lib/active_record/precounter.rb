@@ -13,7 +13,7 @@ module ActiveRecord
     # @return [Array<ActiveRecord::Base>]
     def precount(*association_names)
       records = @relation.to_a
-      return if records.empty?
+      return [] if records.empty?
 
       association_names.each do |association_name|
         association_name = association_name.to_s
