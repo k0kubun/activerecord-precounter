@@ -35,5 +35,23 @@ RSpec.describe ActiveRecord::Precounter do
         ).to eq([])
       end
     end
+
+    context "When the target records has a scope" do
+      after do
+        Tweet.delete_all
+        Favorite.delete_all
+      end
+
+      it 'returns correct records' do
+        tweet = Tweet.create
+        4.times { |i| Favorite.create(tweet: tweet, active: i.even?) }
+
+        precounter = ActiveRecord::Precounter.new(Tweet.all).precount(:favorites, :active_favorites)
+
+        expect(
+          precounter.map { |t| [t.favorites_count, t.active_favorites_count] }
+        ).to eq([[4, 2]])
+      end
+    end
   end
 end

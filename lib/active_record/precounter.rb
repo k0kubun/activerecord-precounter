@@ -26,9 +26,15 @@ module ActiveRecord
           )
         end
 
-        count_by_id = reflection.klass.where(reflection.inverse_of.name => @relation).group(
-          reflection.inverse_of.foreign_key
-        ).count
+        count_by_id = if reflection.has_scope?
+                        reflection.scope_for(reflection.klass.where(reflection.inverse_of.name => @relation)).group(
+                          reflection.inverse_of.foreign_key
+                        ).count
+                      else
+                        reflection.klass.where(reflection.inverse_of.name => @relation).group(
+                          reflection.inverse_of.foreign_key
+                        ).count
+                      end
 
         writer = define_count_accessor(records.first, association_name)
         records.each do |record|
