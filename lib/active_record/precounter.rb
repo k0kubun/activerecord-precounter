@@ -27,11 +27,11 @@ module ActiveRecord
         end
 
         count_by_id = if reflection.has_scope?
-                        reflection.scope_for(reflection.klass.where(reflection.inverse_of.name => @relation)).group(
+                        reflection.scope_for(reflection.klass.where(reflection.inverse_of.name => records.map(&:id))).group(
                           reflection.inverse_of.foreign_key
                         ).count
                       else
-                        reflection.klass.where(reflection.inverse_of.name => @relation).group(
+                        reflection.klass.where(reflection.inverse_of.name => records.map(&:id)).group(
                           reflection.inverse_of.foreign_key
                         ).count
                       end
