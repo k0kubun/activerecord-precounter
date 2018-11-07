@@ -8,8 +8,17 @@ branches:
 matrix:
   include:
     - rvm: 2.4.1
+      env: TASK=spec ARCONN=postgresql
+      gemfile: ci/Gemfile.activerecord-4.2.x
+    - rvm: 2.4.1
+      env: TASK=spec ARCONN=postgresql
+      gemfile: ci/Gemfile.activerecord-5.0.x
+    - rvm: 2.4.1
       env: TASK=spec ARCONN=sqlite3
       gemfile: ci/Gemfile.activerecord-5.1.x
     - rvm: 2.4.1
       env: TASK=spec ARCONN=postgresql
       gemfile: ci/Gemfile.activerecord-5.1.x
+    - rvm: 2.4.1
+      env: TASK=spec ARCONN=postgresql
+      gemfile: ci/Gemfile.activerecord-5.2.x
