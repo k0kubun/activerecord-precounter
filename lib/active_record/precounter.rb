@@ -27,7 +27,9 @@ module ActiveRecord
         end
 
         count_by_id = if reflection.has_scope?
-                        reflection.scope_for(reflection.klass.where(reflection.inverse_of.name => records.map(&:id))).group(
+                        # ActiveRecord 5.0 unscopes #scope_for argument, so adding #where outside that:
+                        # https://github.com/rails/rails/blob/v5.0.7/activerecord/lib/active_record/reflection.rb#L314-L316
+                        reflection.scope_for(reflection.klass.unscoped).where(reflection.inverse_of.name => records.map(&:id)).group(
                           reflection.inverse_of.foreign_key
                         ).count
                       else
