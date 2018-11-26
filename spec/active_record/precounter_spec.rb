@@ -53,5 +53,30 @@ RSpec.describe ActiveRecord::Precounter do
         ).to eq([[4, 2]])
       end
     end
+
+    context "When the target records has a primary_key option" do
+      before do
+        3.times do |i|
+          Tweet.create(another_id: i)
+          i.times do
+            Favorite.create( another_id: i)
+          end
+        end
+      end
+
+      after do
+        Tweet.delete_all
+        Favorite.delete_all
+      end
+
+      it 'returns correct records' do
+        precounter = ActiveRecord::Precounter.new(Tweet.all)
+        expected = Tweet.all.map { |t| t.another_associated_favorites.count }
+
+        expect(
+          precounter.precount(:another_associated_favorites).map(&:another_associated_favorites_count)
+        ).to eq(expected)
+      end
+    end
   end
 end
