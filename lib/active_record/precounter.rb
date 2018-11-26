@@ -26,7 +26,7 @@ module ActiveRecord
           )
         end
 
-        primary_key = reflection.inverse_of.association_primary_key.to_s.to_sym
+        primary_key = reflection.inverse_of.association_primary_key.to_sym
 
         count_by_id = if reflection.has_scope?
                         # ActiveRecord 5.0 unscopes #scope_for argument, so adding #where outside that:
