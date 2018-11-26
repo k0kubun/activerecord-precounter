@@ -59,7 +59,7 @@ RSpec.describe ActiveRecord::Precounter do
         3.times do |i|
           Tweet.create(another_id: i)
           i.times do
-            Favorite.create( another_id: i)
+            Favorite.create(another_id: i)
           end
         end
       end
