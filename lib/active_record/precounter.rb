@@ -26,21 +26,23 @@ module ActiveRecord
           )
         end
 
+        primary_key = reflection.inverse_of.association_primary_key.to_s.to_sym
+
         count_by_id = if reflection.has_scope?
                         # ActiveRecord 5.0 unscopes #scope_for argument, so adding #where outside that:
                         # https://github.com/rails/rails/blob/v5.0.7/activerecord/lib/active_record/reflection.rb#L314-L316
-                        reflection.scope_for(reflection.klass.unscoped).where(reflection.inverse_of.name => records.map(&:id)).group(
+                        reflection.scope_for(reflection.klass.unscoped).where(reflection.inverse_of.name => records.map(&primary_key)).group(
                           reflection.inverse_of.foreign_key
                         ).count
                       else
-                        reflection.klass.where(reflection.inverse_of.name => records.map(&:id)).group(
+                        reflection.klass.where(reflection.inverse_of.name => records.map(&primary_key)).group(
                           reflection.inverse_of.foreign_key
                         ).count
                       end
 
         writer = define_count_accessor(records.first, association_name)
         records.each do |record|
-          record.public_send(writer, count_by_id.fetch(record.id, 0))
+          record.public_send(writer, count_by_id.fetch(record.public_send(primary_key), 0))
         end
       end
       records
