@@ -12,17 +12,24 @@ module ActiveRecord
     # @param [Array<String,Symbol>] association_names - Eager loaded association names. e.g. `[:users, :likes]`
     # @return [Array<ActiveRecord::Base>]
     def precount(*association_names)
-      records = @relation.to_a
-      return [] if records.empty?
+      # Allow single record instances as well as relations to be passed.
+      # The splat here will return an array of the single record if it's
+      # not a relation or otherwise return the records themselves via #to_a.
+      records = *@relation
+      return records if records.empty?
+
+      # We need to get the relation's active class, which is the class itself
+      # in the case of a single record.
+      klass = @relation.respond_to?(:klass) ? @relation.klass : @relation.class
 
       association_names.each do |association_name|
         association_name = association_name.to_s
-        reflection = @relation.klass.reflections.fetch(association_name)
+        reflection = klass.reflections.fetch(association_name)
 
         if reflection.inverse_of.nil?
           raise MissingInverseOf.new(
-            "`#{reflection.klass}` does not have inverse of `#{@relation.klass}##{reflection.name}`. "\
-            "Probably missing to call `#{reflection.klass}.belongs_to #{@relation.name.underscore.to_sym.inspect}`?"
+            "`#{reflection.klass}` does not have inverse of `#{klass}##{reflection.name}`. "\
+            "Probably missing to call `#{reflection.klass}.belongs_to #{klass.name.underscore.to_sym.inspect}`?"
           )
         end
 

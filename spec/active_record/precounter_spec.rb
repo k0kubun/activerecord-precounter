@@ -15,11 +15,19 @@ RSpec.describe ActiveRecord::Precounter do
         Favorite.delete_all
       end
 
-      it 'precounts has_many count properly' do
+      it 'precounts has_many count properly for relations' do
         expected = Tweet.all.map { |t| t.favorites.count }
         expect(
           ActiveRecord::Precounter.new(Tweet.all).precount(:favorites).map { |t| t.favorites_count }
         ).to eq(expected)
+      end
+
+      it 'precounts has_many count properly for active records' do
+        tweet = Tweet.first
+        expected = tweet.favorites.count
+        expect(
+          ActiveRecord::Precounter.new(Tweet.find(tweet.id)).precount(:favorites).map { |t| t.favorites_count }
+        ).to eq([expected])
       end
     end
 
