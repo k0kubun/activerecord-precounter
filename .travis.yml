@@ -5,6 +5,7 @@ cache: bundler
 branches:
   only:
     - master
+dist: trusty
 matrix:
   include:
     - rvm: 2.4.1
