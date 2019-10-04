@@ -1,3 +1,7 @@
+## v0.3.3
+
+* Support passing a single record to `ActiveRecord::Precounter.new` [#8](https://github.com/k0kubun/activerecord-precounter/pull/8)
+
 ## v0.3.2
 
 * Support primary\_key option of belongs\_to association [#7](https://github.com/k0kubun/activerecord-precounter/pull/7)
