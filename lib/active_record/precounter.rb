@@ -49,9 +49,8 @@ module ActiveRecord
 
         reader_name = "#{association_name}_count"
         records.each do |record|
-          record.define_singleton_method(reader_name) do
-            count_by_id.fetch(record.public_send(primary_key), 0)
-          end
+          count = count_by_id.fetch(record.public_send(primary_key), 0)
+          record.define_singleton_method(reader_name) { count }
         end
       end
       records
