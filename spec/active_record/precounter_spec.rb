@@ -29,6 +29,11 @@ RSpec.describe ActiveRecord::Precounter do
           ActiveRecord::Precounter.new(Tweet.find(tweet.id)).precount(:favorites).map { |t| t.favorites_count }
         ).to eq([expected])
       end
+
+      it 'only adds the count attribute for the precounted records' do
+        ActiveRecord::Precounter.new(Tweet.first)
+        expect { Tweet.first.favorites_count }.to raise_error(NoMethodError, /undefined method `favorites_count'/)
+      end
     end
 
     context "When the target records don't exist" do
