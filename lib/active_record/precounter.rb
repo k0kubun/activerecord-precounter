@@ -47,13 +47,28 @@ module ActiveRecord
                         ).count
                       end
 
-        reader_name = "#{association_name}_count"
+        writer = define_count_accessor(records.first, association_name)
         records.each do |record|
-          count = count_by_id.fetch(record.public_send(primary_key), 0)
-          record.define_singleton_method(reader_name) { count }
+          record.public_send(writer, count_by_id.fetch(record.public_send(primary_key), 0))
         end
       end
       records
+    end
+
+    private
+
+    # @param [ActiveRecord::Base] record
+    # @param [String] association_name
+    # @return [String] writer method name
+    def define_count_accessor(record, association_name)
+      reader_name = "#{association_name}_count"
+      writer_name = "#{reader_name}="
+
+      if !record.respond_to?(reader_name) && !record.respond_to?(writer_name)
+        record.class.send(:attr_accessor, reader_name)
+      end
+
+      writer_name
     end
   end
 end
