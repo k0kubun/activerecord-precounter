@@ -30,9 +30,9 @@ RSpec.describe ActiveRecord::Precounter do
         ).to eq([expected])
       end
 
-      it 'only adds the count attribute for the precounted records' do
+      it 'raises if a record was not precounted' do
         ActiveRecord::Precounter.new(Tweet.first)
-        expect { Tweet.first.favorites_count }.to raise_error(NoMethodError, /undefined method `favorites_count'/)
+        expect { Tweet.first.favorites_count }.to raise_error(ActiveRecord::Precountable::NotPrecountedError, /`favorites' not precounted/)
       end
     end
 
