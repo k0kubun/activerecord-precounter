@@ -1,3 +1,8 @@
+## v0.4.0
+
+* [breaking] Raise `NotPrecountedError` instead of returning nil if `*_count` is called without precount
+* Add `ActiveRecord::Precountable` module to actively define `*_count` readers and writers by `precounts` DSL on ActiveRecord::Base.
+
 ## v0.3.3
 
 * Support passing a single record to `ActiveRecord::Precounter.new` [#8](https://github.com/k0kubun/activerecord-precounter/pull/8)
