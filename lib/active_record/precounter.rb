@@ -1,4 +1,5 @@
 require 'active_record/precounter/version'
+require 'active_record/precountable'
 
 module ActiveRecord
   class Precounter
@@ -47,7 +48,7 @@ module ActiveRecord
                         ).count
                       end
 
-        writer = define_count_accessor(records.first, association_name)
+        writer = define_count_accessor(klass, association_name)
         records.each do |record|
           record.public_send(writer, count_by_id.fetch(record.public_send(primary_key), 0))
         end
@@ -57,15 +58,16 @@ module ActiveRecord
 
     private
 
-    # @param [ActiveRecord::Base] record
+    # @param [Class] record class
     # @param [String] association_name
     # @return [String] writer method name
-    def define_count_accessor(record, association_name)
+    def define_count_accessor(klass, association_name)
       reader_name = "#{association_name}_count"
       writer_name = "#{reader_name}="
 
-      if !record.respond_to?(reader_name) && !record.respond_to?(writer_name)
-        record.class.send(:attr_accessor, reader_name)
+      if !klass.method_defined?(reader_name) && !klass.method_defined?(writer_name)
+        klass.extend(ActiveRecord::Precountable)
+        klass.public_send(:precounts, association_name)
       end
 
       writer_name
