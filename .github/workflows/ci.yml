@@ -1,0 +1,44 @@
+name: Test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  test:
+    strategy:
+      matrix:
+        ruby: ['2.4']
+        gemfile:
+          - ci/Gemfile.activerecord-5.0.x
+          - ci/Gemfile.activerecord-5.1.x
+          - ci/Gemfile.activerecord-5.2.x
+        arconn:
+          # - mysql2
+          - postgresql
+          - sqlite3
+    env:
+      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
+      ARCONN:  ${{ matrix.arconn }}
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby ${{ matrix.ruby }}
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
+    - name: Create Database for postgres
+      if: matrix.arconn == 'postgresql'
+      run: psql -h localhost -c "create database activerecord_unittest;" -U postgres
+      env:
+        PGPASSWORD: postgres
+    - name: Run Test
+      run: bundle exec rake spec

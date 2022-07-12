@@ -111,8 +111,14 @@ connections:
 
   postgresql:
     arunit:
+      host: localhost
+      username: postgres
+      password: postgres
       min_messages: warning
     arunit2:
+      host: localhost
+      username: postgres
+      password: postgres
       min_messages: warning
 
   sqlite3:
