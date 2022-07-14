@@ -8,15 +8,32 @@ jobs:
   test:
     strategy:
       matrix:
-        ruby: ['2.4', '2.5', '2.6', '2.7']
-        gemfile:
-          - ci/Gemfile.activerecord-5.0.x
-          - ci/Gemfile.activerecord-5.1.x
-          - ci/Gemfile.activerecord-5.2.x
-        arconn:
-          - mysql2
-          - postgresql
-          - sqlite3
+        include:
+          # Default
+          - ruby: ruby:2.7
+            gemfile: ci/Gemfile.activerecord-5.2.x
+            arconn: sqlite3
+          # Ruby versions
+          - ruby: ruby:2.5
+            gemfile: ci/Gemfile.activerecord-5.2.x
+            arconn: sqlite3
+          - ruby: ruby:2.6
+            gemfile: ci/Gemfile.activerecord-5.2.x
+            arconn: sqlite3
+          # ActiveRecord versions
+          - ruby: ruby:2.7
+            gemfile: ci/Gemfile.activerecord-5.0.x
+            arconn: sqlite3
+          - ruby: ruby:2.7
+            gemfile: ci/Gemfile.activerecord-5.1.x
+            arconn: sqlite3
+          # Databases
+          - ruby: ruby:2.7
+            gemfile: ci/Gemfile.activerecord-5.2.x
+            arconn: mysql2
+          - ruby: ruby:2.7
+            gemfile: ci/Gemfile.activerecord-5.2.x
+            arconn: postgresql
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
       ARCONN:  ${{ matrix.arconn }}
