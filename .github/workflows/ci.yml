@@ -1,0 +1,58 @@
+name: Test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  test:
+    strategy:
+      matrix:
+        ruby: ['2.4', '2.5', '2.6', '2.7']
+        gemfile:
+          - ci/Gemfile.activerecord-5.0.x
+          - ci/Gemfile.activerecord-5.1.x
+          - ci/Gemfile.activerecord-5.2.x
+        arconn:
+          - mysql2
+          - postgresql
+          - sqlite3
+    env:
+      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
+      ARCONN:  ${{ matrix.arconn }}
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: mysql
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby ${{ matrix.ruby }}
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
+    - name: Create Database for postgres
+      if: matrix.arconn == 'postgresql'
+      run: psql -h localhost -c "create database activerecord_unittest;" -U postgres
+      env:
+        PGPASSWORD: postgres
+    - name: Create Database for mysql
+      if: matrix.arconn == 'mysql2'
+      run: mysql -h 127.0.0.1 -e "create database activerecord_unittest;" -u root -pmysql
+    - name: Run Test
+      run: bundle exec rake spec

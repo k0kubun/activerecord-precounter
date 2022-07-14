@@ -83,10 +83,14 @@ connections:
 
   mysql2:
     arunit:
-      username: rails
+      host: 127.0.0.1
+      username: root
+      password: mysql
       encoding: utf8
     arunit2:
-      username: rails
+      host: 127.0.0.1
+      username: root
+      password: mysql
       encoding: utf8
 
   openbase:
@@ -111,8 +115,14 @@ connections:
 
   postgresql:
     arunit:
+      host: localhost
+      username: postgres
+      password: postgres
       min_messages: warning
     arunit2:
+      host: localhost
+      username: postgres
+      password: postgres
       min_messages: warning
 
   sqlite3:
