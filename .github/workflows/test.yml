@@ -14,11 +14,17 @@ jobs:
             gemfile: ci/Gemfile.activerecord-7.0.x
             arconn: sqlite3
           # Ruby versions
-          - ruby: ruby:2.5
-            gemfile: ci/Gemfile.activerecord-5.2.x
+          - ruby: '2.5'
+            gemfile: ci/Gemfile.activerecord-6.1.x
             arconn: sqlite3
-          - ruby: ruby:2.6
-            gemfile: ci/Gemfile.activerecord-5.2.x
+          - ruby: '2.6'
+            gemfile: ci/Gemfile.activerecord-6.1.x
+            arconn: sqlite3
+          - ruby: '2.7'
+            gemfile: ci/Gemfile.activerecord-7.0.x
+            arconn: sqlite3
+          - ruby: '3.0'
+            gemfile: ci/Gemfile.activerecord-7.0.x
             arconn: sqlite3
           # ActiveRecord versions
           - ruby: ruby:2.7
