@@ -27,18 +27,27 @@ jobs:
             gemfile: ci/Gemfile.activerecord-7.0.x
             arconn: sqlite3
           # ActiveRecord versions
-          - ruby: ruby:2.7
+          - ruby: '2.7'
             gemfile: ci/Gemfile.activerecord-5.0.x
             arconn: sqlite3
-          - ruby: ruby:2.7
+          - ruby: '2.7'
             gemfile: ci/Gemfile.activerecord-5.1.x
             arconn: sqlite3
+          - ruby: '2.7'
+            gemfile: ci/Gemfile.activerecord-5.2.x
+            arconn: sqlite3
+          - ruby: '3.1'
+            gemfile: ci/Gemfile.activerecord-6.0.x
+            arconn: sqlite3
+          - ruby: '3.1'
+            gemfile: ci/Gemfile.activerecord-6.1.x
+            arconn: sqlite3
           # Databases
-          - ruby: ruby:2.7
-            gemfile: ci/Gemfile.activerecord-5.2.x
+          - ruby: '3.1'
+            gemfile: ci/Gemfile.activerecord-7.0.x
             arconn: mysql2
-          - ruby: ruby:2.7
-            gemfile: ci/Gemfile.activerecord-5.2.x
+          - ruby: '3.1'
+            gemfile: ci/Gemfile.activerecord-7.0.x
             arconn: postgresql
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
